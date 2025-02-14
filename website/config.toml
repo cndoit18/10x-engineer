@@ -1,0 +1,25 @@
+baseURL = "https://cndoit18.cn/"
+defaultContentLanguage = "zh"
+languageCode = 'en-us'
+copyright = '本站遵循 <a href="https://creativecommons.org/licenses/by-nc/4.0/" >CC-BY-NC 4.0</a> 协议.'
+title = '小翰的世界'
+theme = 'diary'
+
+[params]
+favicon = 'images/favicon.svg'
+enableReadingTime = true
+subtitle = "cndoit18's Blog"
+
+[taxonomies]
+tag = "tags"
+category = "categories"
+
+[[menu.main]]
+url = "/tags"
+name = "标签"
+weight = 1
+
+[[menu.main]]
+url = "/categories"
+name = "系列"
+weight = 2
