@@ -43,3 +43,8 @@ weight = 2
 url = "/about"
 name = "关于"
 weight = 3
+
+[[menu.main]]
+url = "/index.xml"
+name = "RSS"
+weight = 4
