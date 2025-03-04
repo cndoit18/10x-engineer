@@ -46,6 +46,16 @@ numberedSubtitles = true
   [params.buymeacoffee]
   code = ""
 
+  [params.sharingbuttons]
+  facebook = false
+  twitter = false
+  email = false
+  linkedin = false
+  reddit = false
+  whatsapp = false
+  hackernews = false
+  telegram = false
+
 [[menu.main]]
 identifier = "posts"
 name = "Blog"
