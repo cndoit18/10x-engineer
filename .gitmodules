@@ -1,6 +1,3 @@
-[submodule "website/themes/diary"]
-	path = website/themes/diary
-	url = https://github.com/AmazingRise/hugo-theme-diary.git
 [submodule "website/themes/hugo-texify3"]
 	path = website/themes/hugo-texify3
 	url = https://github.com/michaelneuper/hugo-texify3.git
