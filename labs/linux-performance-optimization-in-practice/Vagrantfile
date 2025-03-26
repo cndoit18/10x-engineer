@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
   # by making sure your Vagrantfile isn't accessible to the vagrant box.
   # If you use this you may want to enable additional shared subfolders as
   # shown above.
-  # config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder ".", "/vagrant", disabled: false
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -85,7 +85,10 @@ Vagrant.configure("2") do |config|
     apt-get update
 
     apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
-                       sysstat linux-tools-common linux-tools-$(uname -r) linux-tools-generic apache2-utils
+                       sysstat linux-tools-common linux-tools-$(uname -r) linux-tools-generic apache2-utils stress
     usermod -aG docker vagrant
+
+    curl -Lo - https://go.dev/dl/go1.24.1.linux-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz | tar -xzv -C /usr/local
+    echo "export PATH=\$PATH:/usr/local/go/bin" >> /home/vagrant/.bashrc
   SHELL
 end
