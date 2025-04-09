@@ -1,3 +1,6 @@
 [submodule "website/themes/hugo-texify3"]
 	path = website/themes/hugo-texify3
 	url = https://github.com/michaelneuper/hugo-texify3.git
+[submodule "build-your-own-x/codecrafters-http-server-rust"]
+	path = build-your-own-x/codecrafters-http-server-rust
+	url = https://github.com/cndoit18/codecrafters-http-server-rust.git
