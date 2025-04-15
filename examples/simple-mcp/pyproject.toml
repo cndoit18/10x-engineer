@@ -1,0 +1,13 @@
+[project]
+name = "simple-mcp"
+version = "0.1.0"
+description = "用于演示基本 MCP 服务端与客户端交互的示例项目"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "anyio>=4.9.0",
+    "asyncio>=3.4.3",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.6.0",
+    "pydantic>=2.11.3",
+]
