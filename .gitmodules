@@ -10,3 +10,7 @@
 	path = build-your-own-x/codecrafters-kafka-rust
 	url = https://github.com/cndoit18/codecrafters-kafka-rust.git
 	branch = master
+[submodule "build-your-own-x/codecrafters-git-python"]
+	path = build-your-own-x/codecrafters-git-python
+	url = https://github.com/cndoit18/codecrafters-git-python.git
+	branch = master
