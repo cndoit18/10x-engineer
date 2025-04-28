@@ -1,0 +1,13 @@
+[project]
+name = "simple-a2a"
+version = "0.1.0"
+description = "simple-a2a"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "a2a-samples",
+    "click>=8.1.8",
+]
+
+[tool.uv.sources]
+a2a-samples = { git = "https://github.com/google/A2A", subdirectory = "samples/python" }
