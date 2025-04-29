@@ -14,3 +14,7 @@
 	path = build-your-own-x/codecrafters-git-python
 	url = https://github.com/cndoit18/codecrafters-git-python.git
 	branch = master
+[submodule "courses/d2l-example"]
+	path = courses/d2l-example
+	url = https://github.com/cndoit18/d2l-example.git
+	branch = master
