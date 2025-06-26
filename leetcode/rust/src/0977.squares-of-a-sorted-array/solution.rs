@@ -1,4 +1,13 @@
-struct Solution {}
+// Created by cndoit18 at 2025/06/26 19:07
+// leetgo: 1.4.14
+// https://leetcode.cn/problems/squares-of-a-sorted-array/
+
+use anyhow::Result;
+use leetgo_rs::*;
+
+struct Solution;
+
+// @lc code=begin
 
 impl Solution {
     pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
@@ -18,19 +27,12 @@ impl Solution {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::Solution;
-    #[test]
-    fn test_977() {
-        assert_eq!(Solution::sorted_squares(vec![1]), vec![1]);
-        assert_eq!(
-            Solution::sorted_squares(vec![-4, -1, 0, 3, 10]),
-            vec![0, 1, 9, 16, 100]
-        );
-        assert_eq!(
-            Solution::sorted_squares(vec![-7, -3, 2, 3, 11]),
-            vec![4, 9, 9, 49, 121]
-        );
-    }
+// @lc code=end
+
+fn main() -> Result<()> {
+    let nums: Vec<i32> = deserialize(&read_line()?)?;
+    let ans: Vec<i32> = Solution::sorted_squares(nums).into();
+
+    println!("\noutput: {}", serialize(ans)?);
+    Ok(())
 }

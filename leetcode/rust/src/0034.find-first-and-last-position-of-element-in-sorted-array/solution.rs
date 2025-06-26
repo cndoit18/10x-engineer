@@ -1,4 +1,13 @@
-struct Solution {}
+// Created by cndoit18 at 2025/06/26 19:06
+// leetgo: 1.4.14
+// https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/
+
+use anyhow::Result;
+use leetgo_rs::*;
+
+struct Solution;
+
+// @lc code=begin
 
 impl Solution {
     pub fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
@@ -22,6 +31,7 @@ impl Solution {
         if nums[mid] > target {
             return Solution::search_range(nums[..mid].to_vec(), target);
         }
+
         Solution::search_range(nums[mid..].to_vec(), target)
             .into_iter()
             .map(|x| if x == -1 { -1 } else { x + mid as i32 })
@@ -29,23 +39,13 @@ impl Solution {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::Solution;
-    #[test]
-    fn test_034() {
-        assert_eq!(Solution::search_range(vec![1], 1), vec![0, 0]);
-        assert_eq!(
-            Solution::search_range(vec![5, 7, 7, 8, 8, 10], 8),
-            vec![3, 4]
-        );
-        assert_eq!(
-            Solution::search_range(vec![5, 7, 7, 8, 8, 10], 6),
-            vec![-1, -1]
-        );
-        assert_eq!(Solution::search_range(vec![], 0), vec![-1, -1]);
-        assert_eq!(Solution::search_range(vec![2, 2], 2), vec![0, 1]);
-        assert_eq!(Solution::search_range(vec![1, 2, 3], 3), vec![2, 2]);
-        assert_eq!(Solution::search_range(vec![2, 2], 3), vec![-1, -1]);
-    }
+// @lc code=end
+
+fn main() -> Result<()> {
+    let nums: Vec<i32> = deserialize(&read_line()?)?;
+    let target: i32 = deserialize(&read_line()?)?;
+    let ans: Vec<i32> = Solution::search_range(nums, target).into();
+
+    println!("\noutput: {}", serialize(ans)?);
+    Ok(())
 }

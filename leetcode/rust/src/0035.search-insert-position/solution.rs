@@ -1,4 +1,13 @@
-struct Solution {}
+// Created by cndoit18 at 2025/06/26 19:06
+// leetgo: 1.4.14
+// https://leetcode.cn/problems/search-insert-position/
+
+use anyhow::Result;
+use leetgo_rs::*;
+
+struct Solution;
+
+// @lc code=begin
 
 impl Solution {
     pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
@@ -21,15 +30,13 @@ impl Solution {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::Solution;
-    #[test]
-    fn test_035() {
-        assert_eq!(Solution::search_insert(vec![1], 1), 0);
-        assert_eq!(Solution::search_insert(vec![], 1), 0);
-        assert_eq!(Solution::search_insert(vec![1, 3, 5, 6], 5), 2);
-        assert_eq!(Solution::search_insert(vec![1, 3, 5, 6], 2), 1);
-        assert_eq!(Solution::search_insert(vec![1, 3, 5, 6], 7), 4);
-    }
+// @lc code=end
+
+fn main() -> Result<()> {
+    let nums: Vec<i32> = deserialize(&read_line()?)?;
+    let target: i32 = deserialize(&read_line()?)?;
+    let ans: i32 = Solution::search_insert(nums, target).into();
+
+    println!("\noutput: {}", serialize(ans)?);
+    Ok(())
 }

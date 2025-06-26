@@ -1,0 +1,62 @@
+[[bin]]
+name = 'remove-duplicates-from-sorted-array'
+path = 'src/0026.remove-duplicates-from-sorted-array/solution.rs'
+
+[[bin]]
+name = 'remove-element'
+path = 'src/0027.remove-element/solution.rs'
+
+[[bin]]
+name = 'find-first-and-last-position-of-element-in-sorted-array'
+path = 'src/0034.find-first-and-last-position-of-element-in-sorted-array/solution.rs'
+
+[[bin]]
+name = 'search-insert-position'
+path = 'src/0035.search-insert-position/solution.rs'
+
+[[bin]]
+name = 'sqrtx'
+path = 'src/0069.sqrtx/solution.rs'
+
+[[bin]]
+name = 'remove-linked-list-elements'
+path = 'src/0203.remove-linked-list-elements/solution.rs'
+
+[[bin]]
+name = 'minimum-size-subarray-sum'
+path = 'src/0209.minimum-size-subarray-sum/solution.rs'
+
+[[bin]]
+name = 'move-zeroes'
+path = 'src/0283.move-zeroes/solution.rs'
+
+[[bin]]
+name = 'valid-perfect-square'
+path = 'src/0367.valid-perfect-square/solution.rs'
+
+[[bin]]
+name = 'binary-search'
+path = 'src/0704.binary-search/solution.rs'
+
+[[bin]]
+name = 'backspace-string-compare'
+path = 'src/0844.backspace-string-compare/solution.rs'
+
+[[bin]]
+name = 'fruit-into-baskets'
+path = 'src/0904.fruit-into-baskets/solution.rs'
+
+[[bin]]
+name = 'squares-of-a-sorted-array'
+path = 'src/0977.squares-of-a-sorted-array/solution.rs'
+
+[dependencies]
+anyhow = '1.0.79'
+leetgo-rs = '0.2.1'
+serde = '1.0.196'
+serde_json = '1.0.113'
+
+[package]
+edition = '2024'
+name = 'leetcode-solutions'
+version = '0.1.0'

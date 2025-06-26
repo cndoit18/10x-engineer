@@ -1,9 +1,18 @@
+// Created by cndoit18 at 2025/06/26 19:06
+// leetgo: 1.4.14
+// https://leetcode.cn/problems/fruit-into-baskets/
+
 use std::collections::HashMap;
 
-struct Solution {}
+use anyhow::Result;
+use leetgo_rs::*;
+
+struct Solution;
+
+// @lc code=begin
 
 impl Solution {
-    pub fn total_fruit(fruits: &[i32]) -> i32 {
+    pub fn total_fruit(fruits: Vec<i32>) -> i32 {
         let mut select = HashMap::<i32, usize>::new();
         let (mut left, mut right) = (0, 0);
         let mut max = 0;
@@ -22,15 +31,12 @@ impl Solution {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::Solution;
-    #[test]
-    fn test_904() {
-        assert_eq!(Solution::total_fruit(&[1, 2]), 2);
-        assert_eq!(Solution::total_fruit(&[1, 2, 1]), 3);
-        assert_eq!(Solution::total_fruit(&[0, 1, 2, 2]), 3);
-        assert_eq!(Solution::total_fruit(&[1, 2, 3, 2, 2]), 4);
-        assert_eq!(Solution::total_fruit(&[3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4]), 5);
-    }
+// @lc code=end
+
+fn main() -> Result<()> {
+    let fruits: Vec<i32> = deserialize(&read_line()?)?;
+    let ans: i32 = Solution::total_fruit(fruits).into();
+
+    println!("\noutput: {}", serialize(ans)?);
+    Ok(())
 }

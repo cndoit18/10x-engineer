@@ -1,4 +1,13 @@
-struct Solution {}
+// Created by cndoit18 at 2025/06/26 19:06
+// leetgo: 1.4.14
+// https://leetcode.cn/problems/sqrtx/
+
+use anyhow::Result;
+use leetgo_rs::*;
+
+struct Solution;
+
+// @lc code=begin
 
 impl Solution {
     pub fn my_sqrt(x: i32) -> i32 {
@@ -20,19 +29,12 @@ impl Solution {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::Solution;
-    #[test]
-    fn test_069() {
-        assert_eq!(Solution::my_sqrt(4), 2);
-        assert_eq!(Solution::my_sqrt(5), 2);
-        assert_eq!(Solution::my_sqrt(6), 2);
-        assert_eq!(Solution::my_sqrt(7), 2);
-        assert_eq!(Solution::my_sqrt(8), 2);
-        assert_eq!(Solution::my_sqrt(9), 3);
-        assert_eq!(Solution::my_sqrt(10), 3);
-        assert_eq!(Solution::my_sqrt(1), 1);
-        assert_eq!(Solution::my_sqrt(2147395599), 46339);
-    }
+// @lc code=end
+
+fn main() -> Result<()> {
+    let x: i32 = deserialize(&read_line()?)?;
+    let ans: i32 = Solution::my_sqrt(x).into();
+
+    println!("\noutput: {}", serialize(ans)?);
+    Ok(())
 }
