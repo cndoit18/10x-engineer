@@ -4,13 +4,13 @@ import tiktoken
 from simple_dataset import create_dataloader
 
 
-def text_to_token_idx(text, tokenizer):
+def text_to_token_ids(text, tokenizer):
     encoded = tokenizer.encode(text, allowed_special={"<|endoftext|>"})
     encoded_tensor = torch.tensor(encoded).unsqueeze(0)
     return encoded_tensor
 
 
-def token_idx_to_text(token_ids, tokenizer):
+def token_ids_to_text(token_ids, tokenizer):
     flat = token_ids.squeeze(0)
     return tokenizer.decode(flat.tolist())
 
@@ -40,6 +40,34 @@ def calc_loss_loader(data_loader, model, device, num_batches=None):
         else:
             break
     return total_loss / num_batches
+
+
+def generate(
+    model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None
+):
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -context_size:]
+        with torch.no_grad():
+            logits = model(idx_cond)
+        logits = logits[:, -1, :]
+        if top_k:
+            # Keep only top_k values
+            top_logits, _ = torch.topk(logits, top_k)
+            min_val = top_logits[:, -1]
+            logits = torch.where(
+                logits < min_val, torch.tensor(float("-inf")).to(logits.device), logits
+            )
+        if temperature > 0.0:
+            logits = logits / temperature
+            logits = logits - logits.max(dim=-1, keepdim=True).values
+            probs = torch.softmax(logits, dim=-1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+        else:
+            idx_next = torch.argmax(probas, dim=-1, keepdim=True)
+        if idx_next == eos_id:
+            break
+        idx = torch.cat((idx, idx_next), dim=1)
+    return idx
 
 
 def train_model_simple(
@@ -74,7 +102,7 @@ def train_model_simple(
                 val_losses.append(val_loss)
                 track_tokens_seen.append(tokens_seen)
                 print(
-                    f"Ep {epoch +1} (Step {global_step:06d}): "
+                    f"Ep {epoch + 1} (Step {global_step:06d}): "
                     f"Train loss {train_loss: .3f}",
                     f"Val loss {val_loss:.3f}",
                 )
@@ -96,13 +124,13 @@ def evaluate_model(model, train_loader, val_loader, device, eval_iter):
 def generate_and_print_sample(model, tokenizer, device, start_context):
     model.eval()
     context_size = model.pos_emb.weight.shape[0]
-    encoded = text_to_token_idx(start_context, tokenizer).to(device)
+    encoded = text_to_token_ids(start_context, tokenizer).to(device)
     with torch.no_grad():
         token_ids = generate_text_simple(
             model=model, idx=encoded, max_new_tokens=50, context_size=context_size
         )
-    decoded_text = token_idx_to_text(token_ids, tokenizer)
-    print(decoded_text.replace("\n", " "))
+        decoded_text = token_ids_to_text(token_ids, tokenizer)
+        print(decoded_text.replace("\n", " "))
     model.train()
 
 
@@ -111,7 +139,7 @@ if __name__ == "__main__":
         "vocab_size": 50257,
         "context_length": 256,
         "emb_dim": 768,
-        "n_header": 12,
+        "n_heads": 12,
         "n_layers": 12,
         "drop_rate": 0.1,
         "qkv_bias": False,
@@ -126,11 +154,11 @@ if __name__ == "__main__":
 
     token_ids = generate_text_simple(
         model=model,
-        idx=text_to_token_idx(start_context, tokenizer),
+        idx=text_to_token_ids(start_context, tokenizer),
         max_new_tokens=10,
         context_size=GPT_CONFIG_124M["context_length"],
     )
-    print("Output text \n", token_idx_to_text(token_ids, tokenizer))
+    print("Output text \n", token_ids_to_text(token_ids, tokenizer))
     inputs = torch.tensor([[16833, 3626, 6100], [40, 1107, 588]])
     targets = torch.tensor([[3626, 6100, 345], [1107, 588, 11311]])
     with torch.no_grad():
@@ -178,7 +206,7 @@ if __name__ == "__main__":
         num_workers=0,
     )
 
-    device = torch.device("mps" if torch.mps.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     with torch.no_grad():
         train_loss = calc_loss_loader(train_loader, model, device)
@@ -188,9 +216,10 @@ if __name__ == "__main__":
 
     torch.manual_seed(123)
     model = GPTModel(GPT_CONFIG_124M)
-    device = torch.device("mps" if torch.mps.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.0004, weight_decay=0.1)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=5e-4, weight_decay=0.1)
+
     num_epochs = 10
     train_loader, val_losses, tokens_seen = train_model_simple(
         model,
@@ -203,4 +232,23 @@ if __name__ == "__main__":
         eval_iter=5,
         start_context="Every effort moves you",
         tokenizer=tokenizer,
+    )
+
+    torch.manual_seed(123)
+    token_ids = generate(
+        model=model,
+        idx=text_to_token_ids("Every effort moves you", tokenizer),
+        max_new_tokens=15,
+        context_size=GPT_CONFIG_124M["context_length"],
+        top_k=25,
+        temperature=1.4,
+    )
+
+    print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
+    torch.save(
+        {
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+        },
+        "model_and_optimizer.pth",
     )
