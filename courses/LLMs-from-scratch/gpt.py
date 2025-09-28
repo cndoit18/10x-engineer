@@ -51,6 +51,12 @@ class TransformerBlock(nn.Module):
         x = self.att(x)
         x = self.drop_shortcut(x)
         x = x + shortcut
+
+        x = self.norm2(x)
+        x = self.ff(x)
+        x = self.drop_shortcut(x)
+        x = x + shortcut  # Add the original input back
+
         return x
 
 
