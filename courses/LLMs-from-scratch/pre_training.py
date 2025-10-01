@@ -1,7 +1,7 @@
-from gpt import GPTModel, generate_text_simple
+from gpt import GPTModel, generate_text_simple, ModelArgs
 import torch
 import tiktoken
-from simple_dataset import create_dataloader
+from dataset import create_dataloader
 
 
 def text_to_token_ids(text, tokenizer):
@@ -123,7 +123,7 @@ def evaluate_model(model, train_loader, val_loader, device, eval_iter):
 
 def generate_and_print_sample(model, tokenizer, device, start_context):
     model.eval()
-    context_size = model.pos_emb.weight.shape[0]
+    context_size = model.emb.pos_emb.weight.shape[0]
     encoded = text_to_token_ids(start_context, tokenizer).to(device)
     with torch.no_grad():
         token_ids = generate_text_simple(
@@ -135,15 +135,16 @@ def generate_and_print_sample(model, tokenizer, device, start_context):
 
 
 if __name__ == "__main__":
-    GPT_CONFIG_124M = {
-        "vocab_size": 50257,
-        "context_length": 256,
-        "emb_dim": 768,
-        "n_heads": 12,
-        "n_layers": 12,
-        "drop_rate": 0.1,
-        "qkv_bias": False,
-    }
+    GPT_CONFIG_124M = ModelArgs(
+        vocab_size=50257,
+        context_length=1024,
+        emb_dim=768,
+        n_heads=12,
+        n_layers=12,
+        drop_rate=0.1,
+        qkv_bias=False,
+        inter_dim=3072,
+    )
 
     start_context = "Every effort moves you"
     tokenizer = tiktoken.get_encoding("gpt2")
@@ -156,7 +157,7 @@ if __name__ == "__main__":
         model=model,
         idx=text_to_token_ids(start_context, tokenizer),
         max_new_tokens=10,
-        context_size=GPT_CONFIG_124M["context_length"],
+        context_size=GPT_CONFIG_124M.context_length,
     )
     print("Output text \n", token_ids_to_text(token_ids, tokenizer))
     inputs = torch.tensor([[16833, 3626, 6100], [40, 1107, 588]])
@@ -181,28 +182,31 @@ if __name__ == "__main__":
     neg_avg_log_probas = avg_log_probas * -1
     print(neg_avg_log_probas)
 
-    file_path = "the-verdict.txt"
+    file_path = "asserts/the-verdict.txt"
     with open(file_path, "r", encoding="utf-8") as file:
         text_data = file.read()
 
     train_ratio = 0.90
     split_idx = int(train_ratio * len(text_data))
     train_data = text_data[:split_idx]
-    val_data = text_data[split_idx:]
+    print("train_data length:", len(train_data))
     train_loader = create_dataloader(
         train_data,
         batch_size=2,
-        max_length=GPT_CONFIG_124M["context_length"],
-        drop_last=True,
-        shuffle=True,
+        max_length=GPT_CONFIG_124M.context_length,
+        stride=GPT_CONFIG_124M.context_length,
+        drop_last=False,
+        shuffle=False,
         num_workers=0,
     )
+    val_data = text_data[split_idx:]
     val_loader = create_dataloader(
         val_data,
         batch_size=2,
-        max_length=GPT_CONFIG_124M["context_length"],
-        drop_last=True,
-        shuffle=True,
+        max_length=GPT_CONFIG_124M.context_length,
+        stride=GPT_CONFIG_124M.context_length,
+        drop_last=False,
+        shuffle=False,
         num_workers=0,
     )
 
@@ -239,7 +243,7 @@ if __name__ == "__main__":
         model=model,
         idx=text_to_token_ids("Every effort moves you", tokenizer),
         max_new_tokens=15,
-        context_size=GPT_CONFIG_124M["context_length"],
+        context_size=GPT_CONFIG_124M.context_length,
         top_k=25,
         temperature=1.4,
     )

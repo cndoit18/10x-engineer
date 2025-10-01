@@ -6,10 +6,10 @@ import tiktoken
 class GPTDataset(Dataset):
     def __init__(self, txt, tokenizer, max_length, stride):
         self._chunks = []
-        token_ids = tokenizer.encode(txt)
+        token_ids = tokenizer.encode(txt, allowed_special={"<|endoftext|>"})
         for i in range(0, len(token_ids) - max_length, stride):
-            input_chunk = tuple(token_ids[i : i + max_length])
-            target_chunk = tuple(token_ids[i + 1 : i + max_length + 1])
+            input_chunk = token_ids[i : i + max_length]
+            target_chunk = token_ids[i + 1 : i + max_length + 1]
             self._chunks.append((torch.tensor(input_chunk), torch.tensor(target_chunk)))
 
     def __len__(self):
@@ -21,15 +21,15 @@ class GPTDataset(Dataset):
 
 def create_dataloader(
     text,
-    batch_size=4,
-    max_length=256,
-    stride=128,
+    batch_size,
+    max_length,
+    stride,
     shuffle=True,
     drop_last=True,
     num_workers=0,
 ):
     return DataLoader(
-        GPTDataset(
+        dataset=GPTDataset(
             text, tiktoken.get_encoding("gpt2"), max_length=max_length, stride=stride
         ),
         batch_size=batch_size,
