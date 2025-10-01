@@ -1,4 +1,5 @@
 from torch.utils.data import Dataset, DataLoader
+import torch
 import tiktoken
 
 
@@ -8,8 +9,8 @@ class GPTDataset(Dataset):
         token_ids = tokenizer.encode(txt)
         for i in range(0, len(token_ids) - max_length, stride):
             input_chunk = tuple(token_ids[i : i + max_length])
-            output_chunk = tuple(token_ids[i + 1 : i + max_length + 1])
-            self._chunks.append((input_chunk, output_chunk))
+            target_chunk = tuple(token_ids[i + 1 : i + max_length + 1])
+            self._chunks.append((torch.tensor(input_chunk), torch.tensor(target_chunk)))
 
     def __len__(self):
         return len(self._chunks)
