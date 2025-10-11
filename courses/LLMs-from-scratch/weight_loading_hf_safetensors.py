@@ -126,11 +126,11 @@ if __name__ == "__main__":
     gpt.to(device)
 
     token_ids = generate(
-        model=gpt,
-        idx=text_to_token_ids("How do you", tokenizer, device=device),
-        max_new_tokens=100,
+        model=gpt.to(device),
+        idx=text_to_token_ids("Every effort moves", tokenizer).to(device),
+        max_new_tokens=30,
         context_size=MODEL_CONFIG.context_length,
-        top_k=15,
+        top_k=1,
         temperature=1.0,
     )
     print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
