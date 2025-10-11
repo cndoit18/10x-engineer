@@ -26,9 +26,9 @@ class Embedding(nn.Module):
 
     def forward(self, x):
         batch_size, seq_len = x.shape
-        assert (
-            seq_len <= self.context_length
-        ), f"Sequence length {seq_len} exceeds context length {self.context_length}"
+        assert seq_len <= self.context_length, (
+            f"Sequence length {seq_len} exceeds context length {self.context_length}"
+        )
         tok_embeds = self.tok_emb(x)
         pos_embeds = self.pos_emb(torch.arange(seq_len, device=x.device))
         input_embeds = self.drop_emb(tok_embeds + pos_embeds)
