@@ -125,12 +125,15 @@ if __name__ == "__main__":
     load_weights_into_gpt(gpt, state_dict)
     gpt.to(device)
 
+    prompt = "Every effort moves"
     token_ids = generate(
         model=gpt.to(device),
-        idx=text_to_token_ids("Every effort moves", tokenizer).to(device),
+        idx=text_to_token_ids(prompt, tokenizer).to(device),
         max_new_tokens=30,
         context_size=MODEL_CONFIG.context_length,
         top_k=1,
         temperature=1.0,
     )
-    print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
+    print(
+        f"Prompt:\n{prompt}\n\nOutput text:\n{token_ids_to_text(token_ids, tokenizer)}"
+    )
