@@ -121,7 +121,7 @@ if __name__ == "__main__":
     tokenizer = tiktoken.get_encoding("gpt2")
     gpt = GPTModel(MODEL_CONFIG)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.mps.is_available() else "cpu")
     load_weights_into_gpt(gpt, state_dict)
     gpt.to(device)
 
